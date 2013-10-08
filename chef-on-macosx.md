@@ -132,6 +132,81 @@ Chef Client finished, 1 resources updated
 chef-soloで僕のmac環境を壊すのは嫌なので、Vagrantで立ち上げたVMにchef-soloを入れようと思う。  
 そうしよう。
 
+## Vagrant導入
+
+***後で書く。***
+
+## knife-soloでVagrantで立ち上げたVMにchef-solo環境を構築する
+
+* 下準備
+
+```
+mkdir vagrant1
+cd vagrant1
+vagrant init
+```
+
+* IPアドレス割り当て
+
+```ruby
+  config.vm.network :private_network, ip: "192.168.33.20"
+```
+
+* 立ち上げる
+
+```
+vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+[default] Importing base box 'base'...
+[default] Matching MAC address for NAT networking...
+[default] Setting the name of the VM...
+[default] Clearing any previously set forwarded ports...
+[default] Fixed port collision for 22 => 2222. Now on port 2200.
+[default] Creating shared folders metadata...
+[default] Clearing any previously set network interfaces...
+[default] Preparing network interfaces based on configuration...
+[default] Forwarding ports...
+[default] -- 22 => 2200 (adapter 1)
+[default] Booting VM...
+[default] Waiting for machine to boot. This may take a few minutes...
+[default] Machine booted and ready!
+[default] Configuring and enabling network interfaces...
+[default] Mounting shared folders...
+[default] -- /vagrant
+localhost:vagrant1 noguchiwataru$ vagrant ssh
+Welcome to your Vagrant-built virtual machine.
+[vagrant@localhost ~]$ cat /etc/redhat-release 
+CentOS release 6.4 (Final)
+[vagrant@localhost ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+```
+
+OKみたいですね。  
+それでは、vagrantで立ち上げた環境にchef-soloを入れてみます。
+
+```
+gem install knife-solo --no-ri --no-rdoc
+```
+
+```
+knife solo prepare root@192.168.33.20
+
+Bootstrapping Chef...
+Enter the password for root@192.168.33.20: 
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+101  6790  101  6790    0     0   1111      0  0:00:06  0:00:06 --:--:-- 18705
+Downloading Chef 11.6.0 for el...
+Installing Chef 11.6.0
+警告: /tmp/tmp.mYGe9Gzi/chef-11.6.0.x86_64.rpm: ヘッダ V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+準備中...                ########################################### [100%]
+	パッケージ chef-11.6.0-1.el6.x86_64 は既にインストールされています。
+Generating node config 'nodes/192.168.33.20.json'...
+```
+
+既にインストールされてるみたい。
+
 ----------------------------------------------------------------------------------------------
 
 以下、まだ途中なのです。  
