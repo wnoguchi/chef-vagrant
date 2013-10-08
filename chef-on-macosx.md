@@ -2,21 +2,9 @@
 
 Mac OS XをホストOSとしてchef-solo。
 
-## Tips
-
-chef-soloするときのGemfile。
-
-```
-# Gemfile
-source 'https://rubygems.org'
-gem 'chef'
-gem 'sahara'
-gem 'knife-solo'
-```
-
 ## Getting Started
 
-### インストール
+### chef-soloインストール
 
 ```
 curl -L http://www.opscode.com/chef/install.sh | sudo bash
