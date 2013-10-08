@@ -21,7 +21,8 @@ Thank you for installing Chef!
 
 ### Knifeのお手入れ
 
-切れ味を良くしましょう。
+切れ味を良くしましょう。  
+初回のみでOK。
 
 ```
 knife configure
