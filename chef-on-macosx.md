@@ -31,20 +31,6 @@ Thank you for installing Chef!
 
 最初躓いたんだけど、「おいおい、chefインストールできないじゃん」って思ってたらこれ、最初にsudoかましてるところでcurlの出力にPasswordのプロンプト出てたし。。。パスワード入力してsudo通すようにしたらインストール出来ました。
 
-または
-
-```
-# Gemfile
-source 'https://rubygems.org'
-gem 'chef'
-```
-
-して
-
-```
-bundle install --path vendor/bundle
-```
-
 ### レポジトリの作成
 
 ```
