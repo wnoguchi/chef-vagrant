@@ -31,22 +31,126 @@ Thank you for installing Chef!
 
 最初躓いたんだけど、「おいおい、chefインストールできないじゃん」って思ってたらこれ、最初にsudoかましてるところでcurlの出力にPasswordのプロンプト出てたし。。。パスワード入力してsudo通すようにしたらインストール出来ました。
 
+### Knifeのお手入れ
+
+切れ味を良くしましょう。
+
+```
+knife configure
+```
+
 ### レポジトリの作成
 
 ```
 git clone git://github.com/opscode/chef-repo.git
 ```
 
+して、
+
 ```
-knife configure
+cd chef-repo/
+knife cookbook create hello -o cookbooks
+
+** Creating cookbook hello
+** Creating README for cookbook: hello
+** Creating CHANGELOG for cookbook: hello
+** Creating metadata for cookbook: hello
 ```
+
+### レシピ編集
+
+```ruby
+# cookbooks/hello/recipes/default.rb
+#
+# Cookbook Name:: hello
+# Recipe:: default
+#
+# Copyright 2013, YOUR_COMPANY_NAME
+#
+# All rights reserved - Do Not Redistribute
+#
+
+log "Hello, Chef!"
+```
+
+### 実行するレシピの一覧の定義
+
+```json
+// localhost.json
+{
+  "run_list": [
+    "recipe[hello]"
+  ]
+}
+
+```
+
+### chef-soloの設定
+
+```ruby
+# solo.rb
+file_cache_path "/tmp/chef-solo"
+cookbook_path [ "/home/wnoguchi/chef-repo/cookbooks" ]
+```
+
+### 実行
+
+```
+sudo chef-solo -c solo.rb -j ./localhost.json
+
+Starting Chef Client, version 11.6.0
+Unable to find any JVMs matching version "(null)".
+No Java runtime present, try --request to install.
+Compiling Cookbooks...
+Converging 1 resources
+Recipe: hello::default
+  * log[Hello, Chef!] action write
+
+Chef Client finished, 1 resources updated
+```
+
+Hello, Chef!は無事表示されたけど、
+
+```
+Unable to find any JVMs matching version "(null)".
+No Java runtime present, try --request to install.
+```
+
+なんじゃこのメッセージは。。。
+
+- [OSX Mountain Lion and Java | The Syncing Apple](http://dillernet.com/apple/2012/07/27/osx-mountain-lion-and-java/)
+
+jdkがないのが原因らしい。
+
+```
+javac
+```
+
+って打ったらなんかダイアログ出てきて、自動的にインストールできた。  
+chefは内部的にjdk使ってるのか？  
+今度はエラーメッセージ表示されなくなったのでモーマンタイ。
+
+```
+Starting Chef Client, version 11.6.0
+Compiling Cookbooks...
+Converging 1 resources
+Recipe: hello::default
+  * log[Hello, Chef!] action write
+
+Chef Client finished, 1 resources updated
+```
+
+chef-soloで僕のmac環境を壊すのは嫌なので、Vagrantで立ち上げたVMにchef-soloを入れようと思う。  
+そうしよう。
+
+----------------------------------------------------------------------------------------------
+
+以下、まだ途中なのです。  
+ホストOSも混在しているのです。
 
 ----------------------------------------------------------------------------------------------
 
 ## knife-solo
-
-以下、まだ途中なのです。  
-ホストOSも混在しているのです。
 
 ```
 sudo gem install knife-solo --no-ri --no-rdoc
