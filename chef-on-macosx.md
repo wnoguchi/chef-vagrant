@@ -338,7 +338,7 @@ service httpd start
 >vagrant sandbox off
 ```
 
-## knife-soloでVagrantで立ち上げたVMにchef-solo環境を構築する
+## knife-solo + Vagrantの連携
 
 ### knife-soloのインストール
 
@@ -346,27 +346,40 @@ service httpd start
 
 ```
 gem install knife-solo --no-ri --no-rdoc
+
+gem list | grep knife-solo
+
+knife-solo (0.3.0)
 ```
 
 ### VMにchef-solo環境を構築
 
 ```
-knife solo prepare root@192.168.33.20
+knife solo prepare yunocchi
 
 Bootstrapping Chef...
-Enter the password for root@192.168.33.20: 
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-101  6790  101  6790    0     0   1111      0  0:00:06  0:00:06 --:--:-- 18705
+101  6790  101  6790    0     0   1110      0  0:00:06  0:00:06 --:--:-- 18501
 Downloading Chef 11.6.0 for el...
 Installing Chef 11.6.0
-警告: /tmp/tmp.mYGe9Gzi/chef-11.6.0.x86_64.rpm: ヘッダ V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
+警告: /tmp/tmp.7nhqIjwd/chef-11.6.0.x86_64.rpm: ヘッダ V4 DSA/SHA1 Signature, key ID 83ef826a: NOKEY
 準備中...                ########################################### [100%]
 	パッケージ chef-11.6.0-1.el6.x86_64 は既にインストールされています。
-Generating node config 'nodes/192.168.33.20.json'...
+Generating node config 'nodes/yunocchi.json'...
 ```
 
 既にインストールされてるみたい。
+
+### 新規Chefレポジトリを作成
+
+```
+knife solo init chef-repo
+
+Creating kitchen...
+Creating knife.rb in kitchen...
+Creating cupboards...
+```
 
 ----------------------------------------------------------------------------------------------
 
@@ -374,8 +387,6 @@ Generating node config 'nodes/192.168.33.20.json'...
 ホストOSも混在しているのです。
 
 ----------------------------------------------------------------------------------------------
-
-## knife-solo
 
 ```
 sudo gem install knife-solo --no-ri --no-rdoc
