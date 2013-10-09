@@ -134,28 +134,60 @@ chef-soloで僕のmac環境を壊すのは嫌なので、Vagrantで立ち上げ�
 
 ## Vagrant導入
 
-***後で書く。***
+http://www.vagrantbox.es/
 
-## knife-soloでVagrantで立ち上げたVMにchef-solo環境を構築する
+気軽に仮想マシンを立ち上げて希望の環境を作るための最高の環境。  
+構成ファイル `Vagrantfile` とかで仮想マシンのスペックを記述して、  
+コマンドで数発叩いてイニシャルな状態の仮想マシンが立ち上げ、停止、削除が気軽にできる。  
+さらにはchef-soloとの合わせ技で起動した仮想マシンの構成管理までできてしまう。  
+エンジニアのスキルによらず冪等性があり、再現性の高い仮想マシンを構築することができる。  
+動いた動かないの話が少なくなる。
 
-* 下準備
+Vagrantのインストールの仕方は忘れた。  
+何か特別なこと考えなくてもインストールできます。  
+基本的にVirtualBox必須。  
+というかそれ以外のやり方知らない。
+
+* boxファイル追加
+
+```
+# CentOS 6.3
+vagrant box add base http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.3-x86_64-v20130101.box
+（...とても時間がかかる）
+
+# CentOS 6.4
+vagrant box add base http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130731.box
+```
+
+* Vagrantファイルその他作成
 
 ```
 mkdir vagrant1
 cd vagrant1
 vagrant init
+
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
 ```
 
-* IPアドレス割り当て
+* ホストオンリーネットワークの記述
 
 ```ruby
-  config.vm.network :private_network, ip: "192.168.33.20"
+# Vagrantfile
+Vagrant::Config.run do |config|
+  config.vm.box = "base"
+#(snip)
+  config.vm.network :private_network, ip: "192.168.50.12"
+#(snip)
 ```
 
-* 立ち上げる
+* 仮想マシン起動
 
 ```
 vagrant up
+
 Bringing machine 'default' up with 'virtualbox' provider...
 [default] Importing base box 'base'...
 [default] Matching MAC address for NAT networking...
@@ -173,7 +205,13 @@ Bringing machine 'default' up with 'virtualbox' provider...
 [default] Configuring and enabling network interfaces...
 [default] Mounting shared folders...
 [default] -- /vagrant
-localhost:vagrant1 noguchiwataru$ vagrant ssh
+```
+
+* SSH
+
+```
+vagrant ssh
+
 Welcome to your Vagrant-built virtual machine.
 [vagrant@localhost ~]$ cat /etc/redhat-release 
 CentOS release 6.4 (Final)
@@ -182,12 +220,136 @@ logout
 Connection to 127.0.0.1 closed.
 ```
 
-OKみたいですね。  
-それでは、vagrantで立ち上げた環境にchef-soloを入れてみます。
+あるいはSSHターミナルで普通にIPアドレス叩いてつながります。
+
+- ID: `root`
+- PASS: `vagrant`
+
+あるいはvagrantユーザー上でパス無し `sudo -i` ができます。
+
+* SSHアクセス設定をする
+
+秘密鍵を設定する。  
+`~/.ssh/config` を設定するんだけど、めんどくさいのでコマンドで流し込む。  
+teeコマンドでどんな内容が追記されたのか一応確認。  
+`-a` オプション付けないとconfigファイルが上書きされて無く事になるので注意。
+
+`--host` オプションにはアクセスしたいこのVagrant VMの好きなホスト名を指定します。  
+以下は `yunocchi` でアクセスできる。  
+以下の設定ファイルを見るととても興味深くて、UserKnownHostsFileに`/dev/null`を指定していて  
+Warningが出るのを防いでいるところ。  
+実験用のVMだからフィンガープリントは変化しまくるのを見越してのことでしょう。
+
+```
+vagrant ssh-config --host yunocchi | tee -a ~/.ssh/config
+
+Host yunocchi
+  HostName 127.0.0.1
+  User vagrant
+  Port 2200
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /Users/noguchiwataru/.vagrant.d/insecure_private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+```
+
+* つないでみる
+
+```
+localhost:vagrant1 noguchiwataru$ ssh yunocchi
+Last login: Wed Oct  9 14:28:13 2013 from 10.0.2.2
+Welcome to your Vagrant-built virtual machine.
+[vagrant@localhost ~]$ 
+```
+
+* 停止
+
+```
+vagrant halt
+
+[default] Attempting graceful shutdown of VM...
+```
+
+* 破壊
+
+```
+vagrant destroy
+
+Are you sure you want to destroy the 'default' VM? [y/N] y
+[default] Destroying VM and associated drives...
+```
+
+### sahara でスナップショット、ロールバック
+
+* インストール
+
+```
+>vagrant plugin install sahara
+
+Installing the 'sahara' plugin. This can take a few minutes...
+Installed the plugin 'sahara (0.0.15)'!
+```
+
+* sandboxモードを有効にする
+
+この時点が起点となる。
+
+```
+vagrant up
+
+vagrant sandbox on
+
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+```
+
+* 何か作業する
+
+ためしにApacheでもいれてみよう。
+
+```
+service iptables stop
+yum -y install httpd
+service httpd start
+```
+
+* ロールバックする
+
+よし、気に入らないから戻そう！
+
+```
+>vagrant sandbox rollback
+
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+```
+
+おーすごーい。
+
+* コミット
+
+気に入った設定になったらコミットします。状態を確定する操作です。  
+これ、なんか重いんだよね。。。どうにかなんないのかしら。  
+commitしないと全部破棄されるので涙目になるので注意。
+
+```
+>vagrant sandbox commit
+
+>vagrant sandbox off
+```
+
+## knife-soloでVagrantで立ち上げたVMにchef-solo環境を構築する
+
+### knife-soloのインストール
+
+0.3.0系推奨。
 
 ```
 gem install knife-solo --no-ri --no-rdoc
 ```
+
+### VMにchef-solo環境を構築
 
 ```
 knife solo prepare root@192.168.33.20
