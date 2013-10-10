@@ -6,3 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+
+log "Hello, Vagrant VM Hello, World with chef-solo!!"
+

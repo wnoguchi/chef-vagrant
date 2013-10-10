@@ -408,3 +408,8 @@ knife cookbook create hello -o site-cookbooks
 ** Creating metadata for cookbook: hello
 ```
 
+* VMにcookbookを転送してchef-soloを実行する
+
+```
+knife solo cook yunocchi
+```
