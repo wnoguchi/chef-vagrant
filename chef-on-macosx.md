@@ -394,6 +394,17 @@ Creating cupboards...
 7 directories, 2 files
 ```
 
-ポイントは 0.3.0 以降からは `solo.rb` がいらないということ。
+* ポイントは 0.3.0 以降からは `solo.rb` がいらないということ。
+* 生成した Chefレポジトリ chef-solo はgitで管理する。
 
-生成した Chefレポジトリ chef-solo はgitで管理する。
+### cookbookを作る
+
+```
+knife cookbook create hello -o site-cookbooks
+
+** Creating cookbook hello
+** Creating README for cookbook: hello
+** Creating CHANGELOG for cookbook: hello
+** Creating metadata for cookbook: hello
+```
+
