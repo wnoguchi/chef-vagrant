@@ -688,3 +688,5 @@ Chef Client finished, 5 resources updated
 `{"run_list":["hello"]}` とダブルクォートでくくらないで書くとエラーになる。  
 書き方の問題か・・・。  
 とりあえず動いた。よかった。
+
+* [入門 Chef Solo 第17章 レシピ落ち穂拾い - run_list, ファイル分け, include_recipe - 毎朝30分読書会](http://d.hatena.ne.jp/morning_reading/20130806/p1)
