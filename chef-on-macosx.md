@@ -675,3 +675,16 @@ Recipe: hello::default
 
 Chef Client finished, 5 resources updated
 ```
+
+ふむ。
+
+```
+# nodes/yunocchi.json
+{"run_list":["hello"]}
+```
+
+に変えてみた。動く。
+
+`{"run_list":["hello"]}` とダブルクォートでくくらないで書くとエラーになる。  
+書き方の問題か・・・。  
+とりあえず動いた。よかった。
