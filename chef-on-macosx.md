@@ -527,6 +527,7 @@ end
 
 ```
 
+```
 [vagrant@localhost ~]$ sudo cat /var/chef/cache/chef-stacktrace.out
 Generated at 2013-10-14 00:47:01 +0000
 Chef::Exceptions::CookbookNotFound: Cookbook chef-repo not found. If you're loading chef-repo from another cookbook, make sure you configure the dependency in your metadata
@@ -556,7 +557,7 @@ Chef::Exceptions::CookbookNotFound: Cookbook chef-repo not found. If you're load
 /opt/chef/embedded/lib/ruby/gems/1.9.1/gems/chef-11.6.0/bin/chef-solo:25:in `<top (required)>'
 /usr/bin/chef-solo:23:in `load'
 /usr/bin/chef-solo:23:in `<main>'[vagrant@localhost ~]$ 
-
+```
 
 * [chef (11.6.0) + knife-solo (0.3.0.pre5)は相性が悪いっぽい? - じゅにゃくんのはてブロ。](http://jun-ya.hatenablog.com/entry/2013/07/25/111756)
 
@@ -690,3 +691,104 @@ Chef Client finished, 5 resources updated
 とりあえず動いた。よかった。
 
 * [入門 Chef Solo 第17章 レシピ落ち穂拾い - run_list, ファイル分け, include_recipe - 毎朝30分読書会](http://d.hatena.ne.jp/morning_reading/20130806/p1)
+
+### nginxの立ち上げ
+
+* クックブック作成
+
+```
+bundle exec knife cookbook create nginx -o site-cookbooks
+```
+
+* `nodes/yunocchi.json` の編集
+
+nginxクックブックを実行するように指定。
+
+```
+{"run_list":["nginx"]}
+```
+
+* レシピの編集
+
+```
+package "nginx" do
+  action :install
+end
+
+service "nginx" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
+
+service "iptables" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :stop ]
+end
+```
+
+* chef-solo実行
+
+knife solo経由で。
+
+```
+bundle exec knife solo cook yunocchi
+Running Chef on yunocchi...
+Checking Chef version...
+Uploading the kitchen...
+Generating solo config...
+Running Chef...
+Starting Chef Client, version 11.6.0
+Compiling Cookbooks...
+Converging 3 resources
+Recipe: nginx::default
+  * package[nginx] action install
+    * No version specified, and no candidate version available for nginx
+================================================================================
+Error executing action `install` on resource 'package[nginx]'
+================================================================================
+
+
+Chef::Exceptions::Package
+-------------------------
+No version specified, and no candidate version available for nginx
+
+
+Resource Declaration:
+---------------------
+# In /home/vagrant/chef-solo/cookbooks-2/nginx/recipes/default.rb
+
+ 10: package "nginx" do
+ 11:   action :install
+ 12: end
+ 13: 
+
+
+
+Compiled Resource:
+------------------
+# Declared in /home/vagrant/chef-solo/cookbooks-2/nginx/recipes/default.rb:10:in `from_file'
+
+package("nginx") do
+  action [:install]
+  retries 0
+  retry_delay 2
+  package_name "nginx"
+  cookbook_name :nginx
+  recipe_name "default"
+end
+
+
+
+[2013-10-14T13:45:08+00:00] ERROR: Running exception handlers
+[2013-10-14T13:45:08+00:00] ERROR: Exception handlers complete
+[2013-10-14T13:45:08+00:00] FATAL: Stacktrace dumped to /var/chef/cache/chef-stacktrace.out
+Chef Client failed. 0 resources updated
+[2013-10-14T13:45:08+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
+ERROR: RuntimeError: chef-solo failed. See output above.
+```
+
+Amazon Linuxじゃないときつめか。
+
+## 参考サイト
+
+* [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
