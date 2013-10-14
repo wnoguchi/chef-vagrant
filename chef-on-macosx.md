@@ -789,6 +789,21 @@ ERROR: RuntimeError: chef-solo failed. See output above.
 
 Amazon Linuxじゃないときつめか。
 
+## Opscode Communityのクックボックをインポートする
+
+膨大なクックブックの集積を利用する。
+
+サインアップして秘密鍵を取得。パーミッションは600に設定。
+
+```
+cat <<EOF >>~/.chef/knife.rb
+client_key '~/.chef/wnoguchi.pem'
+cookbook_path ['./cookbooks']
+EOF
+```
+
+**また明日。**
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
