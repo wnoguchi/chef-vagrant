@@ -802,7 +802,419 @@ cookbook_path ['./cookbooks']
 EOF
 ```
 
-**また明日。**
+* yumクックブックを使ってみる
+
+リポジトリはバージョン管理下にあり、ワークツリーはクリーンな状態であるとする。
+
+```
+bundle exec knife solo init chef-repo
+cd chef-repo/
+git init && git add -A && git commit -m "Initial commit."
+```
+
+```
+bundle exec knife cookbook site vendor yum
+
+Removing pre-existing version.
+Uncompressing yum version 2.3.4.
+removing downloaded tarball
+No changes made to yum
+Checking out the master branch.
+```
+
+yumのクックブックは入ったみたいだけど、自動的にコミットは行われていないように見えるなり。  
+`.gitignore` を見ると `/cookbook/` 以下がまるごと無視されるいるようです。
+
+```
+.
+├── cookbooks
+│   └── yum
+│       ├── CHANGELOG.md
+│       ├── README.md
+│       ├── attributes
+│       │   ├── default.rb
+│       │   ├── elrepo.rb
+│       │   ├── epel.rb
+│       │   └── remi.rb
+│       ├── files
+│       │   └── default
+│       │       └── tests
+│       │           └── minitest
+│       │               ├── default_test.rb
+│       │               ├── support
+│       │               │   └── helpers.rb
+│       │               └── test_test.rb
+│       ├── metadata.json
+│       ├── metadata.rb
+│       ├── providers
+│       │   ├── key.rb
+│       │   └── repository.rb
+│       ├── recipes
+│       │   ├── default.rb
+│       │   ├── elrepo.rb
+│       │   ├── epel.rb
+│       │   ├── ius.rb
+│       │   ├── remi.rb
+│       │   ├── repoforge.rb
+│       │   ├── test.rb
+│       │   └── yum.rb
+│       ├── resources
+│       │   ├── key.rb
+│       │   └── repository.rb
+│       └── templates
+│           └── default
+│               ├── repo.erb
+│               ├── yum-rhel5.conf.erb
+│               └── yum-rhel6.conf.erb
+├── data_bags
+├── nodes
+├── roles
+└── site-cookbooks
+
+17 directories, 26 files
+
+```
+
+* epelを有効にする
+
+```
+{"run_list":["yum::epel"]}
+```
+
+* 料理する
+
+```
+Running Chef on yunocchi...
+Checking Chef version...
+Uploading the kitchen...
+Generating solo config...
+Running Chef...
+Starting Chef Client, version 11.6.2
+Compiling Cookbooks...
+Converging 2 resources
+Recipe: yum::epel
+  * yum_key[RPM-GPG-KEY-EPEL-6] action add (up to date)
+Recipe: <Dynamically Defined Resource>
+  * package[gnupg2] action install (up to date)
+  * execute[import-rpm-gpg-key-RPM-GPG-KEY-EPEL-6] action nothing (skipped due to action :nothing)
+  * remote_file[/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6] action create
+    - create new file /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+    - update content in file /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6 from none to 626e18
+        --- /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6	2013-10-15 15:27:44.459652833 +0000
+        +++ /tmp/chef-rest20131015-3515-1qe13r7	2013-10-15 15:27:50.111818943 +0000
+        @@ -0,0 +1,29 @@
+        +-----BEGIN PGP PUBLIC KEY BLOCK-----
+        +Version: GnuPG v1.4.5 (GNU/Linux)
+        +
+        +mQINBEvSKUIBEADLGnUj24ZVKW7liFN/JA5CgtzlNnKs7sBg7fVbNWryiE3URbn1
+        +JXvrdwHtkKyY96/ifZ1Ld3lE2gOF61bGZ2CWwJNee76Sp9Z+isP8RQXbG5jwj/4B
+        +M9HK7phktqFVJ8VbY2jfTjcfxRvGM8YBwXF8hx0CDZURAjvf1xRSQJ7iAo58qcHn
+        +XtxOAvQmAbR9z6Q/h/D+Y/PhoIJp1OV4VNHCbCs9M7HUVBpgC53PDcTUQuwcgeY6
+        +pQgo9eT1eLNSZVrJ5Bctivl1UcD6P6CIGkkeT2gNhqindRPngUXGXW7Qzoefe+fV
+        +QqJSm7Tq2q9oqVZ46J964waCRItRySpuW5dxZO34WM6wsw2BP2MlACbH4l3luqtp
+        +Xo3Bvfnk+HAFH3HcMuwdaulxv7zYKXCfNoSfgrpEfo2Ex4Im/I3WdtwME/Gbnwdq
+        +3VJzgAxLVFhczDHwNkjmIdPAlNJ9/ixRjip4dgZtW8VcBCrNoL+LhDrIfjvnLdRu
+        +vBHy9P3sCF7FZycaHlMWP6RiLtHnEMGcbZ8QpQHi2dReU1wyr9QgguGU+jqSXYar
+        +1yEcsdRGasppNIZ8+Qawbm/a4doT10TEtPArhSoHlwbvqTDYjtfV92lC/2iwgO6g
+        +YgG9XrO4V8dV39Ffm7oLFfvTbg5mv4Q/E6AWo/gkjmtxkculbyAvjFtYAQARAQAB
+        +tCFFUEVMICg2KSA8ZXBlbEBmZWRvcmFwcm9qZWN0Lm9yZz6JAjYEEwECACAFAkvS
+        +KUICGw8GCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRA7Sd8qBgi4lR/GD/wLGPv9
+        +qO39eyb9NlrwfKdUEo1tHxKdrhNz+XYrO4yVDTBZRPSuvL2yaoeSIhQOKhNPfEgT
+        +9mdsbsgcfmoHxmGVcn+lbheWsSvcgrXuz0gLt8TGGKGGROAoLXpuUsb1HNtKEOwP
+        +Q4z1uQ2nOz5hLRyDOV0I2LwYV8BjGIjBKUMFEUxFTsL7XOZkrAg/WbTH2PW3hrfS
+        +WtcRA7EYonI3B80d39ffws7SmyKbS5PmZjqOPuTvV2F0tMhKIhncBwoojWZPExft
+        +HpKhzKVh8fdDO/3P1y1Fk3Cin8UbCO9MWMFNR27fVzCANlEPljsHA+3Ez4F7uboF
+        +p0OOEov4Yyi4BEbgqZnthTG4ub9nyiupIZ3ckPHr3nVcDUGcL6lQD/nkmNVIeLYP
+        +x1uHPOSlWfuojAYgzRH6LL7Idg4FHHBA0to7FW8dQXFIOyNiJFAOT2j8P5+tVdq8
+        +wB0PDSH8yRpn4HdJ9RYquau4OkjluxOWf0uRaS//SUcCZh+1/KBEOmcvBHYRZA5J
+        +l/nakCgxGb2paQOzqqpOcHKvlyLuzO5uybMXaipLExTGJXBlXrbbASfXa/yGYSAG
+        +iVrGz9CE6676dMlm8F+s3XXE13QZrXmjloc6jwOljnfAkjTGXjiB7OULESed96MR
+        +XtfLk0W5Ab9pd7tKDR6QHI7rgHXfCopRnZ2VVQ==
+        +=V/6I
+        +-----END PGP PUBLIC KEY BLOCK-----
+    - change mode from '' to '0644'
+
+  * execute[import-rpm-gpg-key-RPM-GPG-KEY-EPEL-6] action run
+    - execute rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+
+Recipe: yum::epel
+  * yum_repository[epel] action add (up to date)
+Recipe: <Dynamically Defined Resource>
+  * yum_key[epel-key] action add (up to date)
+  * execute[yum-makecache-epel] action nothing (skipped due to action :nothing)
+  * ruby_block[reload-internal-yum-cache-for-epel] action nothing (skipped due to action :nothing)
+  * template[/etc/yum.repos.d/epel.repo] action create
+    - create new file /etc/yum.repos.d/epel.repo
+    - update content in file /etc/yum.repos.d/epel.repo from none to 18fb55
+        --- /etc/yum.repos.d/epel.repo	2013-10-15 15:27:50.316722833 +0000
+        +++ /tmp/chef-rendered-template20131015-3515-1nutqve	2013-10-15 15:27:50.318721833 +0000
+        @@ -0,0 +1,8 @@
+        +# Generated by Chef for localhost
+        +# Local modifications will be overwritten.
+        +[epel]
+        +name=Extra Packages for Enterprise Linux
+        +mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=$basearch
+        +gpgcheck=1
+        +gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+        +enabled=1
+    - change mode from '' to '0644'
+
+  * execute[yum-makecache-epel] action run
+    - execute yum -q makecache --disablerepo=* --enablerepo=epel
+
+  * ruby_block[reload-internal-yum-cache-for-epel] action create
+    - execute the ruby block reload-internal-yum-cache-for-epel
+
+Chef Client finished, 5 resources updated
+```
+
+epelが入ったかどうか確認する。
+
+```
+noguchiwataru-no-MacBook-Air:vagrant1 noguchiwataru$ vagrant ssh
+Last login: Tue Oct 15 15:27:42 2013 from 10.0.2.2
+Welcome to your Vagrant-built virtual machine.
+[vagrant@localhost ~]$ sudo yum repolist
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirror.fairway.ne.jp
+ * epel: ftp.kddilabs.jp
+ * extras: mirror.fairway.ne.jp
+ * updates: mirror.fairway.ne.jp
+repo id                           repo name                                                      status
+base                              CentOS-6 - Base                                                6,381
+epel                              Extra Packages for Enterprise Linux                            9,789
+extras                            CentOS-6 - Extras                                                 13
+updates                           CentOS-6 - Updates                                             1,367
+repolist: 17,550
+
+```
+
+入ってるね。
+
+じゃあさっき失敗したnginxのクックブックももう一回トライしてみるか。
+
+```
+bundle exec knife cookbook create nginx -o site-cookbooks
+cat <<EOF >>site-cookbooks/nginx/recipes/default.rb
+package "nginx" do
+  action :install
+end
+
+service "nginx" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :start ]
+end
+
+service "iptables" do
+  supports :status => true, :restart => true, :reload => true
+  action [ :enable, :stop ]
+end
+EOF
+```
+
+```
+// nodes/yunocchi.json
+{"run_list":["yum::epel", "nginx"]}
+```
+
+```
+bundle exec knife solo cook yunocchi
+
+Running Chef on yunocchi...
+Checking Chef version...
+Uploading the kitchen...
+Generating solo config...
+Running Chef...
+Starting Chef Client, version 11.6.2
+Compiling Cookbooks...
+Converging 5 resources
+Recipe: yum::epel
+  * yum_key[RPM-GPG-KEY-EPEL-6] action add (up to date)
+  * yum_repository[epel] action add (up to date)
+Recipe: nginx::default
+  * package[nginx] action install
+    - install version 1.0.15-5.el6 of package nginx
+
+  * service[nginx] action enable
+    - enable service service[nginx]
+
+  * service[nginx] action start
+================================================================================
+Error executing action `start` on resource 'service[nginx]'
+================================================================================
+
+
+Mixlib::ShellOut::ShellCommandFailed
+------------------------------------
+Expected process to exit with [0], but received '1'
+---- Begin output of /sbin/service nginx start ----
+STDOUT: Starting nginx: [FAILED]
+STDERR: nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+nginx: [emerg] still could not bind()
+---- End output of /sbin/service nginx start ----
+Ran /sbin/service nginx start returned 1
+
+
+Resource Declaration:
+---------------------
+# In /home/vagrant/chef-solo/cookbooks-2/nginx/recipes/default.rb
+
+ 13: service "nginx" do
+ 14:   supports :status => true, :restart => true, :reload => true
+ 15:   action [ :enable, :start ]
+ 16: end
+ 17: 
+
+
+
+Compiled Resource:
+------------------
+# Declared in /home/vagrant/chef-solo/cookbooks-2/nginx/recipes/default.rb:13:in `from_file'
+
+service("nginx") do
+  action [:enable, :start]
+  updated true
+  supports {:status=>true, :restart=>true, :reload=>true}
+  retries 0
+  retry_delay 2
+  service_name "nginx"
+  enabled true
+  pattern "nginx"
+  startup_type :automatic
+  cookbook_name :nginx
+  recipe_name "default"
+end
+
+
+
+[2013-10-15T15:37:32+00:00] ERROR: Running exception handlers
+[2013-10-15T15:37:32+00:00] ERROR: Exception handlers complete
+[2013-10-15T15:37:32+00:00] FATAL: Stacktrace dumped to /var/chef/cache/chef-stacktrace.out
+Chef Client failed. 2 resources updated
+[2013-10-15T15:37:32+00:00] FATAL: Chef::Exceptions::ChildConvergeError: Chef run process exited unsuccessfully (exit code 1)
+ERROR: RuntimeError: chef-solo failed. See output above.
+```
+
+うっ、おかしくなった。
+ログを見るにApacheとリッスンしてるポートが干渉してる気がする。
+
+やりなおし、saharaでスナップショットとってロールバックできるようにしてやってみる。  
+こういうとき便利だなあ。
+
+```
+vagrant sandbox on
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+
+
+bundle exec knife solo cook yunocchi
+
+Running Chef on yunocchi...
+Checking Chef version...
+Uploading the kitchen...
+Generating solo config...
+Running Chef...
+Starting Chef Client, version 11.6.2
+Compiling Cookbooks...
+Converging 5 resources
+Recipe: yum::epel
+  * yum_key[RPM-GPG-KEY-EPEL-6] action add (up to date)
+Recipe: <Dynamically Defined Resource>
+  * package[gnupg2] action install (up to date)
+  * execute[import-rpm-gpg-key-RPM-GPG-KEY-EPEL-6] action nothing (skipped due to action :nothing)
+  * remote_file[/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6] action create
+    - create new file /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+    - update content in file /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6 from none to 626e18
+        --- /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6	2013-10-15 15:44:25.078250177 +0000
+        +++ /tmp/chef-rest20131015-2525-1xejhrx	2013-10-15 15:44:30.770094755 +0000
+        @@ -0,0 +1,29 @@
+        +-----BEGIN PGP PUBLIC KEY BLOCK-----
+        +Version: GnuPG v1.4.5 (GNU/Linux)
+        +
+        +mQINBEvSKUIBEADLGnUj24ZVKW7liFN/JA5CgtzlNnKs7sBg7fVbNWryiE3URbn1
+        +JXvrdwHtkKyY96/ifZ1Ld3lE2gOF61bGZ2CWwJNee76Sp9Z+isP8RQXbG5jwj/4B
+        +M9HK7phktqFVJ8VbY2jfTjcfxRvGM8YBwXF8hx0CDZURAjvf1xRSQJ7iAo58qcHn
+        +XtxOAvQmAbR9z6Q/h/D+Y/PhoIJp1OV4VNHCbCs9M7HUVBpgC53PDcTUQuwcgeY6
+        +pQgo9eT1eLNSZVrJ5Bctivl1UcD6P6CIGkkeT2gNhqindRPngUXGXW7Qzoefe+fV
+        +QqJSm7Tq2q9oqVZ46J964waCRItRySpuW5dxZO34WM6wsw2BP2MlACbH4l3luqtp
+        +Xo3Bvfnk+HAFH3HcMuwdaulxv7zYKXCfNoSfgrpEfo2Ex4Im/I3WdtwME/Gbnwdq
+        +3VJzgAxLVFhczDHwNkjmIdPAlNJ9/ixRjip4dgZtW8VcBCrNoL+LhDrIfjvnLdRu
+        +vBHy9P3sCF7FZycaHlMWP6RiLtHnEMGcbZ8QpQHi2dReU1wyr9QgguGU+jqSXYar
+        +1yEcsdRGasppNIZ8+Qawbm/a4doT10TEtPArhSoHlwbvqTDYjtfV92lC/2iwgO6g
+        +YgG9XrO4V8dV39Ffm7oLFfvTbg5mv4Q/E6AWo/gkjmtxkculbyAvjFtYAQARAQAB
+        +tCFFUEVMICg2KSA8ZXBlbEBmZWRvcmFwcm9qZWN0Lm9yZz6JAjYEEwECACAFAkvS
+        +KUICGw8GCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRA7Sd8qBgi4lR/GD/wLGPv9
+        +qO39eyb9NlrwfKdUEo1tHxKdrhNz+XYrO4yVDTBZRPSuvL2yaoeSIhQOKhNPfEgT
+        +9mdsbsgcfmoHxmGVcn+lbheWsSvcgrXuz0gLt8TGGKGGROAoLXpuUsb1HNtKEOwP
+        +Q4z1uQ2nOz5hLRyDOV0I2LwYV8BjGIjBKUMFEUxFTsL7XOZkrAg/WbTH2PW3hrfS
+        +WtcRA7EYonI3B80d39ffws7SmyKbS5PmZjqOPuTvV2F0tMhKIhncBwoojWZPExft
+        +HpKhzKVh8fdDO/3P1y1Fk3Cin8UbCO9MWMFNR27fVzCANlEPljsHA+3Ez4F7uboF
+        +p0OOEov4Yyi4BEbgqZnthTG4ub9nyiupIZ3ckPHr3nVcDUGcL6lQD/nkmNVIeLYP
+        +x1uHPOSlWfuojAYgzRH6LL7Idg4FHHBA0to7FW8dQXFIOyNiJFAOT2j8P5+tVdq8
+        +wB0PDSH8yRpn4HdJ9RYquau4OkjluxOWf0uRaS//SUcCZh+1/KBEOmcvBHYRZA5J
+        +l/nakCgxGb2paQOzqqpOcHKvlyLuzO5uybMXaipLExTGJXBlXrbbASfXa/yGYSAG
+        +iVrGz9CE6676dMlm8F+s3XXE13QZrXmjloc6jwOljnfAkjTGXjiB7OULESed96MR
+        +XtfLk0W5Ab9pd7tKDR6QHI7rgHXfCopRnZ2VVQ==
+        +=V/6I
+        +-----END PGP PUBLIC KEY BLOCK-----
+    - change mode from '' to '0644'
+
+  * execute[import-rpm-gpg-key-RPM-GPG-KEY-EPEL-6] action run
+    - execute rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+
+Recipe: yum::epel
+  * yum_repository[epel] action add (up to date)
+Recipe: <Dynamically Defined Resource>
+  * yum_key[epel-key] action add (up to date)
+  * execute[yum-makecache-epel] action nothing (skipped due to action :nothing)
+  * ruby_block[reload-internal-yum-cache-for-epel] action nothing (skipped due to action :nothing)
+  * template[/etc/yum.repos.d/epel.repo] action create
+    - create new file /etc/yum.repos.d/epel.repo
+    - update content in file /etc/yum.repos.d/epel.repo from none to 18fb55
+        --- /etc/yum.repos.d/epel.repo	2013-10-15 15:44:30.975197172 +0000
+        +++ /tmp/chef-rendered-template20131015-2525-woqbwo	2013-10-15 15:44:30.976197672 +0000
+        @@ -0,0 +1,8 @@
+        +# Generated by Chef for localhost
+        +# Local modifications will be overwritten.
+        +[epel]
+        +name=Extra Packages for Enterprise Linux
+        +mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=epel-6&arch=$basearch
+        +gpgcheck=1
+        +gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+        +enabled=1
+    - change mode from '' to '0644'
+
+  * execute[yum-makecache-epel] action run
+    - execute yum -q makecache --disablerepo=* --enablerepo=epel
+
+  * ruby_block[reload-internal-yum-cache-for-epel] action create
+    - execute the ruby block reload-internal-yum-cache-for-epel
+
+Recipe: nginx::default
+  * package[nginx] action install
+    - install version 1.0.15-5.el6 of package nginx
+
+  * service[nginx] action enable
+    - enable service service[nginx]
+
+  * service[nginx] action start
+    - start service service[nginx]
+
+  * service[iptables] action enable (up to date)
+  * service[iptables] action stop
+    - stop service service[iptables]
+
+Chef Client finished, 9 resources updated
+```
+
+![nginx](img/nginx.png)
+
+うまくいった！  
+また明日。
 
 ## 参考サイト
 
