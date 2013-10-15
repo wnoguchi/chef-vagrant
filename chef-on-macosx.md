@@ -1213,7 +1213,10 @@ Chef Client finished, 9 resources updated
 
 ![nginx](img/nginx.png)
 
-うまくいった！  
+うまくいった！
+
+サードパーティのクックブックをガシガシ使うのはchef-soloに使い慣れてからのほうがいいそうです。
+
 また明日。
 
 ## 参考サイト
