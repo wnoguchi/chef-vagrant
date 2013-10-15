@@ -797,7 +797,7 @@ Amazon Linuxじゃないときつめか。
 
 ```
 cat <<EOF >>~/.chef/knife.rb
-client_key '~/.chef/wnoguchi.pem'
+client_key '~/Dropbox/chef/wnoguchi.pem'
 cookbook_path ['./cookbooks']
 EOF
 ```
