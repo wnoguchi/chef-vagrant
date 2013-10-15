@@ -2,6 +2,10 @@
 
 WindowsをホストOSとしてchef-solo。
 
+* Ruby環境: rumix2, ruby 1.9.3p448 (2013-06-27) [i386-mingw32]
+* Chef: 11.6.2
+* knife-solo: 0.3.0
+
 ## Vagrant
 
 http://www.vagrantbox.es/
@@ -28,7 +32,7 @@ the comments in the Vagrantfile as well as documentation on
 Vagrant::Config.run do |config|
   config.vm.box = "base"
 #(snip)
-  config.vm.network :private_network, ip: "192.168.50.12"
+  config.vm.network :private_network, ip: "192.168.50.11"
 #(snip)
 ```
 
@@ -88,26 +92,12 @@ Are you sure you want to destroy the 'default' VM? [y/N] y
 [default] Destroying VM and associated drives...
 ```
 
-コマンドラインからサスペンドもできるらしい。  
-ライフチェンジング。
+コマンドラインからサスペンドもできるらしい。
 
 ```
 vagrant suspend
 
 [default] Saving VM state and suspending execution...
-```
-
-Macでsshキー生成してみた。  
-configに流し込む。
-
-```
-vagrant ssh-config --host melody >>~/.ssh/config
-```
-
-そして
-
-```
-ssh melody
 ```
 
 ### sahara
@@ -131,4 +121,21 @@ Installed the plugin 'sahara (0.0.15)'!
 >vagrant sandbox off
 
 
+```
+
+### SSHの設定
+
+configに流し込む。  
+MacがホストOSの場合と同じ要領。
+
+```
+vagrant ssh-config --host win-centos64 | tee -a ~/.ssh/config
+```
+
+そしてつないでみる。
+
+```
+ssh win-centos64
+Welcome to your Vagrant-built virtual machine.
+[vagrant@localhost ~]$
 ```
