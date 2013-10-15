@@ -6,6 +6,12 @@ chef-solo + Vagrant勉強用リポジトリー。
 
 ### 公認
 
+#### Vagrant
+
+- [A list of base boxes for Vagrant - Vagrantbox.es](http://www.vagrantbox.es/)  
+Vagrantのboxイメージの集積所
+- [PackerでVagrant Boxを作成する際のトラブルシューティング | ユニキャストラボ](http://lab.unicast.ne.jp/2013/09/09/troubleshooting-create-vagrant-box-with-packer/)
+
 #### Opscode community
 
 膨大なcookbooksが集積されている。  
