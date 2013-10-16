@@ -4,8 +4,7 @@ chef-solo + Vagrant勉強用リポジトリー。
 ほぼ以下の電子書籍を参考書に勉強しています。  
 伊藤直也さんの本で必ず買ったほうがいいです。
 
-- [Amazon.co.jp： 入門Chef Solo - Infrastructure as Code eBook: 伊藤直也: Kindleストア](http://www.amazon.co.jp/%E5%85%A5%E9%96%80Chef-Solo-Infrastructure-Code-ebook/dp/B00BSPH158)  
-主にこれを参考にさせてもらっています。
+- [Amazon.co.jp： 入門Chef Solo - Infrastructure as Code eBook: 伊藤直也: Kindleストア](http://www.amazon.co.jp/%E5%85%A5%E9%96%80Chef-Solo-Infrastructure-Code-ebook/dp/B00BSPH158)
 
 ## 参考サイト
 
