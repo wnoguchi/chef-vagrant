@@ -1217,6 +1217,16 @@ Chef Client finished, 9 resources updated
 
 サードパーティのクックブックをガシガシ使うのはchef-soloに使い慣れてからのほうがいいそうです。
 
+## 代表的なレシピのサンプルを読む: td-agent
+
+いろいろエッセンシャルなものが詰まってるらしい。Fluentd（ログ収集パッケージ）
+
+- [treasure-data/chef-td-agent](https://github.com/treasure-data/chef-td-agent/)
+
+```
+git clone https://github.com/treasure-data/chef-td-agent.git
+```
+
 また明日。
 
 ## 参考サイト
