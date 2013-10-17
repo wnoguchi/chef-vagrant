@@ -1223,8 +1223,20 @@ Chef Client finished, 9 resources updated
 
 - [treasure-data/chef-td-agent](https://github.com/treasure-data/chef-td-agent/)
 
+まずはchefリポジトリを作ってそこにレシピをクローンしてくる？
+
 ```
-git clone https://github.com/treasure-data/chef-td-agent.git
+bundle exec knife solo init chef-repo
+git submodule add -f git@github.com:wnoguchi/chef-td-agent.git chef-repo/cookbooks/chef-td-agent
+
+Cloning into 'chef-repo/cookbooks/chef-td-agent'...
+remote: Counting objects: 64, done.
+remote: Compressing objects: 100% (40/40), done.
+remote: Total 64 (delta 18), reused 46 (delta 7)
+Receiving objects: 100% (64/64), 10.96 KiB | 4.00 KiB/s, done.
+Resolving deltas: 100% (18/18), done.
+Checking connectivity... done
+
 ```
 
 また明日。
