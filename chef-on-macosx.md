@@ -1239,7 +1239,25 @@ Checking connectivity... done
 
 ```
 
-また明日。
+* クックブックchef-td-agentのツリー構造。
+
+```
+.
+├── README.rdoc
+├── attributes
+│   └── default.rb
+├── libraries
+│   └── provider_td_rubygems.rb
+├── metadata.rb
+├── recipes
+│   └── default.rb
+├── resources
+│   └── gem.rb
+└── templates
+    └── default
+        └── td-agent.conf.erb
+
+```
 
 ## 参考サイト
 
