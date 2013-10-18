@@ -1239,7 +1239,7 @@ Checking connectivity... done
 
 ```
 
-* クックブックchef-td-agentのツリー構造。
+### クックブックchef-td-agentのツリー構造。
 
 ```
 .
@@ -1257,6 +1257,48 @@ Checking connectivity... done
     └── default
         └── td-agent.conf.erb
 
+```
+
+### 構成要素
+
+* Resource: Group, User, Template,apt_repository, yum_repository
+* Attribute: node['foo']
+
+### ohai
+
+システム上のいろんな値を取得するライブラリ。  
+Cehfをインストールすると一緒に入る。
+
+* Mac
+
+```
+noguchiwataru-no-MacBook-Air:chef-td-agent noguchiwataru$ bundle exec ohai | head
+{
+  "languages": {
+    "ruby": {
+      "platform": "x86_64-darwin12.4.1",
+      "version": "1.9.3",
+      "release_date": "2013-06-27",
+      "target": "x86_64-apple-darwin12.4.1",
+      "target_cpu": "x86_64",
+      "target_vendor": "apple",
+      "target_os": "darwin12.4.1",
+```
+
+* CentOS on Vagrant VM
+
+```
+[vagrant@localhost ~]$ ohai | head
+{
+  "languages": {
+    "ruby": {
+      "platform": "x86_64-linux",
+      "version": "1.8.7",
+      "release_date": "2011-06-30",
+      "target": "x86_64-redhat-linux-gnu",
+      "target_cpu": "x86_64",
+      "target_vendor": "redhat",
+      "target_os": "linux",
 ```
 
 ## 参考サイト
