@@ -6,6 +6,34 @@ chef-solo + Vagrant勉強用リポジトリー。
 
 - [Amazon.co.jp： 入門Chef Solo - Infrastructure as Code eBook: 伊藤直也: Kindleストア](http://www.amazon.co.jp/%E5%85%A5%E9%96%80Chef-Solo-Infrastructure-Code-ebook/dp/B00BSPH158)
 
+## Vagrant Host-only network IP address and HostName design policy
+
+### MacBook Air in Company
+
+#### About
+
+vmacc(Virtual MAC Company)
+
+* ex. `192.168.100.10` `vmacc10`
+
+#### SSH configuration generation example
+
+```
+vagrant ssh-config --host vmacc10 | tee -a ~/.ssh/config
+```
+
+and connect to VirtualBox host like this
+
+```
+ssh vmacc10
+```
+
+#### Prepare Chef-solo into VM
+
+```
+bundle exec knife solo prepare vmacc10
+```
+
 ## 参考サイト
 
 ### 公認
