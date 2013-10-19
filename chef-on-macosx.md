@@ -1301,6 +1301,17 @@ noguchiwataru-no-MacBook-Air:chef-td-agent noguchiwataru$ bundle exec ohai | hea
       "target_os": "linux",
 ```
 
+* キー名を指定して値を調べられる
+
+以下はプラットフォームを取得する例。
+
+```
+noguchiwataru-no-MacBook-Air:chef-repo-example1 noguchiwataru$ bundle exec ohai platform
+[
+  "mac_os_x"
+]
+```
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
