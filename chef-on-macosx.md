@@ -1261,7 +1261,13 @@ Checking connectivity... done
 
 ### 構成要素
 
-* Resource: Group, User, Template,apt_repository, yum_repository
+* Resource:
+  * Group
+  * User
+  * Template
+  * apt_repository
+  * yum_repository
+  * Package
 * Attribute: node['foo']
 
 ### ohai
