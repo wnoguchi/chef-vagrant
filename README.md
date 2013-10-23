@@ -36,6 +36,10 @@ bundle exec knife solo prepare vmacc10
 
 ## 参考サイト
 
+### マニュアル
+
+- [About Resources and Providers — Chef Docs](http://docs.opscode.com/resource.html)
+
 ### 公認
 
 #### Vagrant
