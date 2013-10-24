@@ -1318,6 +1318,24 @@ noguchiwataru-no-MacBook-Air:chef-repo-example1 noguchiwataru$ bundle exec ohai 
 ]
 ```
 
+## Resourceについて
+
+### Notification
+
+リソースタイプ、リソース名に対してアクションを指定する。
+
+```ruby
+template 'httpd.conf' do
+  path "/etc/httpd/conf/httpd.conf"
+  source "httpd.conf.erb"
+  owner "root"
+  group "root"
+  mode 0644
+  # (snip)
+  notifies :restart, 'service[httpd]'
+end
+```
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
