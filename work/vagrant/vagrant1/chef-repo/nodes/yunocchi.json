@@ -1,1 +1,6 @@
-{"run_list":["hello"]}
+{
+  "node_attrs": {
+    "key1": "wooo!!"
+  },
+  "run_list":["hello"]
+}

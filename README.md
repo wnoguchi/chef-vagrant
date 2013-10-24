@@ -8,6 +8,14 @@ chef-solo + Vagrant勉強用リポジトリー。
 
 ## Vagrant Host-only network IP address and HostName design policy
 
+### MacBook Air in Home
+
+#### About
+
+vmach(Virtual MAC home)
+
+* ex. `192.168.100.10` `vmach10`
+
 ### MacBook Air in Company
 
 #### About

@@ -1,0 +1,9 @@
+Attribute read template test:
+
+* Platform: <%= node[:platform] %>
+* Ruby: <%= node[:languages][:ruby][:version] %>
+* IP Address: <%= node[:ipaddress] %>
+
+And node Attribute value
+
+* key1: <%= node['node_attrs']['key1'] %>

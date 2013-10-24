@@ -1336,6 +1336,74 @@ template 'httpd.conf' do
 end
 ```
 
+* And Subscribes in Resource Fire action!!
+
+### Template Resource
+
+ohaiで取得してきた値はシンボル参照、jsonに記述した値は文字列参照を使う。
+
+#### templateを生成してみる
+
+* `node/yunocchi.json`
+
+```
+{
+  "node_attrs": {
+    "key1": "wooo!!"
+  },
+  "run_list":["hello"]
+}
+```
+
+* `recipes/default.rb`
+
+```
+# generate sample template result with Attribute values
+
+template "/tmp/template_test.txt" do
+  source "template_test.txt.erb"
+  mode 0644
+end
+```
+
+* `templates/default/template_test.txt.rb`
+
+```
+Attribute read template test:
+
+* Platform: <%= node[:platform] %>
+* Ruby: <%= node[:languages][:ruby][:version] %>
+* IP Address: <%= node[:ipaddress] %>
+
+And node Attribute value
+
+* key1: <%= node['node_attrs']['key1'] %>
+```
+
+* 実行してみる
+
+```
+bundle exec knife solo prepare yunocchi
+bundle exec knife solo cook yunocchi
+```
+
+できたかな？
+
+```
+[vagrant@vagrant1-berkshelf ~]$ cat /tmp/template_test.txt 
+Attribute read template test:
+
+* Platform: centos
+* Ruby: 1.8.7
+* IP Address: 10.0.2.15
+
+And node Attribute value
+
+* key1: wooo!!
+```
+
+期待どおり。
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)

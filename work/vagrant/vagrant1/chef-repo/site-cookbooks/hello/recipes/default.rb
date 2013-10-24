@@ -23,3 +23,9 @@ service "iptables" do
   action [ :enable, :stop ]
 end
 
+# generate sample template result with Attribute values
+
+template "/tmp/template_test.txt" do
+  source "template_test.txt.erb"
+  mode 0644
+end
