@@ -1,10 +1,28 @@
 # VagrantでAmazon EC2のインスタンスを操作する
 
+VirtualBoxだけではなく、Amazon EC2をプロバイダとして選択できるようになったそうです。  
+たまらない。  
 こういうの見るとやりたくてしょうがないわけです。
+
+## インストール
+
+* AWSプラグインをインストール
 
 ```
 vagrant plugin install vagrant-aws
 ```
+
+* ダミーのboxをadd
+
+```
+vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+
+$ vagrant box list
+base  (virtualbox)
+dummy (aws)
+```
+
+ダミーのboxが追加された。
 
 ## 参考サイト
 
