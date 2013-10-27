@@ -54,7 +54,6 @@ bundle exec knife solo prepare vmacc10
 
 - [A list of base boxes for Vagrant - Vagrantbox.es](http://www.vagrantbox.es/)  
 Vagrantのboxイメージの集積所
-- [PackerでVagrant Boxを作成する際のトラブルシューティング | ユニキャストラボ](http://lab.unicast.ne.jp/2013/09/09/troubleshooting-create-vagrant-box-with-packer/)
 
 #### Opscode community
 
@@ -66,6 +65,9 @@ Vagrantのboxイメージの集積所
 ### ナウいトピック
 
 - [Ruby - 今っぽい Vagrant + Chef Solo チュートリアル - Qiita [キータ]](http://qiita.com/taiki45/items/b46a2f32248720ec2bae)
+- [Vagrant 1.1 で EC2 を vagrant up - naoyaのはてなダイアリー](http://d.hatena.ne.jp/naoya/20130315/1363340698)  
+Amazon EC2のインスタンスをupする。近いうちに読みたい。
+- [PackerでVagrant Boxを作成する際のトラブルシューティング | ユニキャストラボ](http://lab.unicast.ne.jp/2013/09/09/troubleshooting-create-vagrant-box-with-packer/)
 
 ### Chef系
 
