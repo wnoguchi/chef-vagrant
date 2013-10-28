@@ -62,6 +62,12 @@ Vagrantのboxイメージの集積所
 
 - [Opscode Community](http://community.opscode.com/cookbooks)
 
+### 実践的
+
+#### Rails + Vagrant + Chef Solo
+
+- [ASCIIcasts - “Episode 292 - Vagrantで仮想マシン”](http://ja.asciicasts.com/episodes/292-virtual-machines-with-vagrant)
+
 ### ナウいトピック
 
 - [Ruby - 今っぽい Vagrant + Chef Solo チュートリアル - Qiita [キータ]](http://qiita.com/taiki45/items/b46a2f32248720ec2bae)
