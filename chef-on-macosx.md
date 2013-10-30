@@ -1514,6 +1514,8 @@ Filename				Type		Size	Used	Priority
 /swap.img                               file		2097148	0	-1
 ```
 
+何回走らせてもswapのエントリが増えないのですばらしい。
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
