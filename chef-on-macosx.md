@@ -1408,6 +1408,42 @@ And node Attribute value
 
 時間が空いてしまった・・・。 15章 から。
 
+```
+bash "install perlbrew" do
+
+  user 'vagrant'
+  group 'vagrant'
+  
+  cwd '/home/vagrant'
+  environment "HOME" => '/home/vagrant'
+  code <<-EOC
+    curl -kL http://install.perlbrew.pl | bash
+  EOC
+  creates "/home/vagrant/perl5/perlbrew/bin/perlbrew"
+
+end
+
+```
+
+なんか以下の警告が表示される。んーなにこれ。。。今までこんなの出てこなかったんだけど。。。なんかそれっぽく動いているし。
+
+```
+WARNING: Local cookbook_path '/Users/noguchiwataru/Documents/repositories/github/chef-vagrant-working/vagrant1/chef-repo/cookbooks' does not exist
+[2013-10-30T13:28:08+00:00] FATAL: No cookbook found in ["/home/vagrant/chef-solo/cookbooks-1", "/home/vagrant/chef-solo/cookbooks-2", "/home/vagrant/chef-solo/cookbooks-3"], make sure cookbook_path is set correctly.
+```
+
+```
+Running Chef...
+Starting Chef Client, version 11.6.2
+Compiling Cookbooks...
+```
+
+マイナーバージョン上がってる。
+
+- [Mac - Chefに入門 (1) - Qiita キータ](http://qiita.com/us10096698/items/d75a16e82cc1b511b883)
+
+とりあえず意味がわからないことはよくわかった。
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
