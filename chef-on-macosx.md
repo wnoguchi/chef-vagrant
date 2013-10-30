@@ -1444,6 +1444,76 @@ Compiling Cookbooks...
 
 とりあえず意味がわからないことはよくわかった。
 
+* EC2のマイクロインスタンススワップ作成
+
+```
+be knife cookbook create ec2-mkswap -o site-cookbooks/
+be knife solo prepare pg1x
+(nodeファイルいじくる)
+ks cook pg1x
+
+```
+
+・・・実行されない。
+
+- [Ruby - Chef で Amazon VPC 内に配置したインスタンスの node["ec2"] が nil になってしまう場合 - Qiita [キータ]](http://qiita.com/labocho/items/2f08cc3d249303122917)
+- [Ohai 6.14.0 released | Opscode Blog](http://www.opscode.com/blog/2012/05/30/ohai-6-14-0-released/)
+
+ec2上で
+
+```
+sudo -i
+mkdir -p /etc/chef/ohai/hints
+echo {} > /etc/chef/ohai/hints/ec2.json
+```
+
+```
+ohai ec2
+```
+
+表示されるようになった。
+
+```
+log "this is ec2 swap creation recipe."
+log "Instance Type is: #{node[:ec2][:instance_type]}"
+
+bash 'create swapfile' do
+
+  code <<-EOC
+    dd if=/dev/zero of=/swap.img bs=1M count=2048 && chmod 600 /swap.img
+    mkswap /swap.img
+  EOC
+  only_if { not node[:ec2].nil? and node[:ec2][:instance_type] == 't1.micro' }
+  creates "/swap.img"
+
+end
+
+# swapファイルの定義をfstabに書くやつ
+# 何回走らせても1エントリだけ？
+mount '/dev/null' do
+  action :enable
+  device '/swap.img'
+  fstype 'swap'
+  only_if { not node[:ec2].nil? and node[:ec2][:instance_type] == 't1.micro' }
+end
+
+bash 'activate swap' do
+  code 'swapon -ae'
+  # スワップ領域がひとつもなければスワップを有効にする
+  only_if "test `cat /proc/swaps | wc -l` -eq 1"
+end
+
+```
+
+```
+/swap.img /dev/null swap defaults 0 2
+
+
+
+Filename				Type		Size	Used	Priority
+/swap.img                               file		2097148	0	-1
+```
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
