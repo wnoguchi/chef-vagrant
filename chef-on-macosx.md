@@ -1404,6 +1404,10 @@ And node Attribute value
 
 期待どおり。
 
+------------------------------------------------------------------------
+
+時間が空いてしまった・・・。 15章 から。
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
