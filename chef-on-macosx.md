@@ -1329,14 +1329,51 @@ cookbook 'nginx'
     chef.run_list = [
         "recipe[sandbox::default]",
         "recipe[yum::epel]",
-        "recipe[yum::nginx]",
+        "recipe[nginx]",
     ]
   end
 ```
 
 ```
 bundle exec vagrant up
+
+(snip)
+
+There are errors in the configuration of this machine. Please fix
+the following errors and try again:
+
+SSH:
+* The following settings don't exist: max_tries, timeout
+
 ```
+
+```
+vagrant --version
+Vagrant 1.3.1
+```
+
+- [Getting Started Writing Chef Cookbooks the Berkshelf Way, Part 1 - Mischa Taylor's Coding Blog](http://misheska.com/blog/2013/06/16/getting-started-writing-chef-cookbooks-the-berkshelf-way/)
+
+によると
+
+```
+  config.ssh.max_tries = 40
+  config.ssh.timeout   = 120
+
+#↓
+
+config.vm.boot_timeout = 120
+```
+
+としないといけないみたい
+
+そして稼働中のVMに対して再度レシピ転送するときは以下のようにする。
+
+```
+bundle exec vagrant provision
+```
+
+おお、しっかりnginx立ち上がっとる。すごいな。
 
 ## 参考サイト
 
