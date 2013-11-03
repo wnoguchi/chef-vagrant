@@ -50,6 +50,8 @@ bundle exec knife solo prepare vmacc10
 
 ### 公認
 
+* [Berkshelf](http://berkshelf.com/)
+
 #### Vagrant
 
 - [A list of base boxes for Vagrant - Vagrantbox.es](http://www.vagrantbox.es/)  
