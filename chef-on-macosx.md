@@ -1182,6 +1182,69 @@ Filename				Type		Size	Used	Priority
 
 何回走らせてもswapのエントリが増えないのですばらしい。
 
+## Berkshelf
+
+* Gemfile
+
+```
+source "https://rubygems.org"
+
+gem 'knife-solo', '0.3.0'
+gem 'chef'
+gem 'berkshelf'
+```
+
+* Berksfile
+
+chefレポジトリのルートに置く？
+
+```
+site :opscode
+cookbook 'yum'
+cookbook 'nginx'
+```
+
+とりあえず `cookbooks/` 以下のサードパーティ製クックブックを全削除して
+
+```
+bundle exec knife solo cook vagrant1
+
+Running Chef on vagrant1...
+Checking Chef version...
+Installing Berkshelf cookbooks to 'cookbooks'...
+Installing yum (2.4.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing nginx (2.0.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing apt (2.3.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing bluepill (2.3.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing rsyslog (1.9.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing build-essential (1.4.2) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing ohai (1.1.12) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Installing runit (1.3.0) from site: 'http://cookbooks.opscode.com/api/v1/cookbooks'
+Uploading the kitchen...
+Generating solo config...
+Running Chef...
+```
+
+が失敗するかやってみたらこのタイミングで不足しているクックブックは勝手に取得してくれちゃう感じでした。
+
+で、明示的なbundle installに相当するコマンドが
+
+```
+bundle exec berks --path cookbooks
+
+Using yum (2.4.0)
+Using nginx (2.0.0)
+Using apt (2.3.0)
+Using bluepill (2.3.0)
+Using rsyslog (1.9.0)
+Using build-essential (1.4.2)
+Using ohai (1.1.12)
+Using runit (1.3.0)
+```
+
+になるんだけど、`cookbooks/` 以下を改めて削除しても改めて外から取ってくる気配はない。  
+予めどっかにキャッシュしてるのかな？
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
