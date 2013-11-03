@@ -1245,6 +1245,59 @@ Using runit (1.3.0)
 になるんだけど、`cookbooks/` 以下を改めて削除しても改めて外から取ってくる気配はない。  
 予めどっかにキャッシュしてるのかな？
 
+### Berkshef + Vagrant 連携
+
+```
+bundle exec berks cookbook vagrant2
+
+      create  vagrant2/files/default
+      create  vagrant2/templates/default
+      create  vagrant2/attributes
+      create  vagrant2/definitions
+      create  vagrant2/libraries
+      create  vagrant2/providers
+      create  vagrant2/recipes
+      create  vagrant2/resources
+      create  vagrant2/recipes/default.rb
+      create  vagrant2/metadata.rb
+      create  vagrant2/LICENSE
+      create  vagrant2/README.md
+      create  vagrant2/Berksfile
+      create  vagrant2/Thorfile
+      create  vagrant2/chefignore
+      create  vagrant2/.gitignore
+         run  git init from "./vagrant2"
+      create  vagrant2/Gemfile
+      create  vagrant2/Vagrantfile
+
+cd vagrant2
+
+.
+├── Berksfile
+├── Gemfile
+├── LICENSE
+├── README.md
+├── Thorfile
+├── Vagrantfile
+├── attributes
+├── chefignore
+├── definitions
+├── files
+│   └── default
+├── libraries
+├── metadata.rb
+├── providers
+├── recipes
+│   └── default.rb
+├── resources
+└── templates
+    └── default
+
+```
+
+以上を見るとVagrantfileとBerkshelf、クックブックの内容がごちゃまぜになってる。  
+混乱している。
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
