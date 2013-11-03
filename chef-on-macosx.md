@@ -1298,6 +1298,46 @@ cd vagrant2
 以上を見るとVagrantfileとBerkshelf、クックブックの内容がごちゃまぜになってる。  
 混乱している。
 
+```
+bundle
+```
+
+でなんかインストール。このままだとグローバルなgemとしてインストールされる気がする。。。
+
+Attributeやrun_listの記述はVagrantfileに統合するようです。
+
+- [今っぽい Vagrant + Chef Solo チュートリアル - Qiita [キータ]](http://qiita.com/taiki45/items/b46a2f32248720ec2bae)
+
+```ruby
+site :opscode
+
+metadata
+cookbook 'yum'
+cookbook 'nginx'
+```
+
+```ruby
+  config.vm.provision :chef_solo do |chef|
+    chef.json = {
+      :mysql => {
+        :server_root_password => 'rootpass',
+        :server_debian_password => 'debpass',
+        :server_repl_password => 'replpass'
+      }
+    }
+
+    chef.run_list = [
+        "recipe[sandbox::default]",
+        "recipe[yum::epel]",
+        "recipe[yum::nginx]",
+    ]
+  end
+```
+
+```
+bundle exec vagrant up
+```
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
