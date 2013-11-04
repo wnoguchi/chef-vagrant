@@ -1375,6 +1375,128 @@ bundle exec vagrant provision
 
 おお、しっかりnginx立ち上がっとる。すごいな。
 
+## VagrantのマルチVM機能を使ってみる
+
+Chef Serverは敷居高めなので今回は見送り。  
+`vagrant init` して `Vagrantfile` に以下の記述を追加する。  
+ちなみにバージョンは Vagrant 1.3.1 です。  
+バージョン上がるとホストオンリーネットワークの記述とか微妙に違っているっぽいので注意。
+
+以下は5つのVMを立ち上げる例。
+
+```ruby
+  config.vm.define :vm1 do |cfg|
+    cfg.vm.box = "base"
+    cfg.vm.network :private_network, ip: "192.168.30.10"
+    cfg.vm.host_name = "vm1"
+  end
+
+  config.vm.define :vm2 do |cfg|
+    cfg.vm.box = "base"
+    cfg.vm.network :private_network, ip: "192.168.30.11"
+    cfg.vm.host_name = "vm2"
+  end
+
+  config.vm.define :vm3 do |cfg|
+    cfg.vm.box = "base"
+    cfg.vm.network :private_network, ip: "192.168.30.12"
+    cfg.vm.host_name = "vm3"
+  end
+
+  config.vm.define :vm4 do |cfg|
+    cfg.vm.box = "base"
+    cfg.vm.network :private_network, ip: "192.168.30.13"
+    cfg.vm.host_name = "vm4"
+  end
+
+  config.vm.define :vm5 do |cfg|
+    cfg.vm.box = "base"
+    cfg.vm.network :private_network, ip: "192.168.30.14"
+    cfg.vm.host_name = "vm5"
+  end
+
+```
+
+そして
+
+```
+vagrant up
+```
+
+```
+Macintosh:vagrant2 noguchiwataru$ vagrant up
+Bringing machine 'vm1' up with 'virtualbox' provider...
+Bringing machine 'vm2' up with 'virtualbox' provider...
+Bringing machine 'vm3' up with 'virtualbox' provider...
+Bringing machine 'vm4' up with 'virtualbox' provider...
+Bringing machine 'vm5' up with 'virtualbox' provider...
+[vm1] Importing base box 'base'...
+[vm1] Matching MAC address for NAT networking...
+[vm1] Setting the name of the VM...
+[vm1] Clearing any previously set forwarded ports...
+[vm1] Creating shared folders metadata...
+[vm1] Clearing any previously set network interfaces...
+[vm1] Preparing network interfaces based on configuration...
+[vm1] Forwarding ports...
+[vm1] -- 22 => 2222 (adapter 1)
+[vm1] Booting VM...
+[vm1] Waiting for machine to boot. This may take a few minutes...
+[vm1] Machine booted and ready!
+[vm1] Setting hostname...
+[vm1] Configuring and enabling network interfaces...
+[vm1] Mounting shared folders...
+[vm1] -- /vagrant
+[vm2] Importing base box 'base'...
+[vm2] Matching MAC address for NAT networking...
+
+(snip)
+
+
+[vm5] Setting hostname...
+[vm5] Configuring and enabling network interfaces...
+[vm5] Mounting shared folders...
+[vm5] -- /vagrant
+
+```
+
+すごいですねー。
+
+SSHはホスト名を指定して
+
+```
+vagrant ssh vm1
+```
+
+VMのステータス一覧を取得するには
+
+```
+vagrant status
+
+Current machine states:
+
+vm1                       running (virtualbox)
+vm2                       running (virtualbox)
+vm3                       running (virtualbox)
+vm4                       running (virtualbox)
+vm5                       running (virtualbox)
+
+This environment represents multiple VMs. The VMs are all listed
+above with their current state. For more information about a specific
+VM, run `vagrant status NAME`.
+```
+
+全部の仮想マシンを停止するには
+
+```
+vagrant halt
+
+[vm1] Attempting graceful shutdown of VM...
+[vm2] Attempting graceful shutdown of VM...
+[vm3] Attempting graceful shutdown of VM...
+[vm4] Attempting graceful shutdown of VM...
+[vm5] Attempting graceful shutdown of VM...
+```
+
 ## 参考サイト
 
 * [Chef Soloの正しい始め方 | tsuchikazu blog](http://tsuchikazu.net/chef_solo_start/)
