@@ -88,7 +88,7 @@ sudo /Library/StartupItems/VirtualBox/VirtualBox restart
 
 ### 公認
 
-* [Berkshelf](http://berkshelf.com/)
+- [Berkshelf](http://berkshelf.com/)
 
 #### Vagrant
 
@@ -101,6 +101,7 @@ Vagrantのboxイメージの集積所
 サインアップして秘密鍵を保存するのです。
 
 - [Opscode Community](http://community.opscode.com/cookbooks)
+- [opscode-cookbooks (Opscode Public Cookbooks)](https://github.com/opscode-cookbooks)
 
 ### 実践的
 
