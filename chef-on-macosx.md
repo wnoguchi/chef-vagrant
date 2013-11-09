@@ -281,6 +281,12 @@ Are you sure you want to destroy the 'default' VM? [y/N] y
 [default] Destroying VM and associated drives...
 ```
 
+確認がうざいときは `-f` オプションをつける。
+
+```
+vagrant destroy -f
+```
+
 ### sahara でスナップショット、ロールバック
 
 * インストール
