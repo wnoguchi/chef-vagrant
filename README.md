@@ -42,6 +42,44 @@ ssh vmacc10
 bundle exec knife solo prepare vmacc10
 ```
 
+## 最近のはなし
+
+僕の環境はVirtualBox4.2だけど、Mavericksにしてからしょっちゅうエラーになる。なんなの。
+
+```
+$ vagrant up
+Bringing machine 'default' up with 'virtualbox' provider...
+[default] Clearing any previously set forwarded ports...
+[Berkshelf] This version of the Berkshelf plugin has not been fully tested on this version of Vagrant.
+[Berkshelf] You should check for a newer version of vagrant-berkshelf.
+[Berkshelf] If you encounter any errors with this version, please report them at https://github.com/RiotGames/vagrant-berkshelf/issues
+[Berkshelf] You can also join the discussion in #berkshelf on Freenode.
+[Berkshelf] Updating Vagrant's berkshelf: '/Users/noguchiwataru/.berkshelf/default/vagrant/berkshelf-20131109-10615-o2kbg1-default'
+[Berkshelf] Using hello (0.1.0) at './site-cookbooks/hello'
+[default] Creating shared folders metadata...
+[default] Clearing any previously set network interfaces...
+There was an error while executing `VBoxManage`, a CLI used by Vagrant
+for controlling VirtualBox. The command and stderr is shown below.
+
+Command: ["hostonlyif", "create"]
+
+Stderr: 0%...
+Progress state: NS_ERROR_FAILURE
+VBoxManage: error: Failed to create the host-only adapter
+VBoxManage: error: VBoxNetAdpCtl: Error while adding new interface: failed to open /dev/vboxnetctl: No such file or directory
+
+VBoxManage: error: Details: code NS_ERROR_FAILURE (0x80004005), component HostNetworkInterface, interface IHostNetworkInterface
+VBoxManage: error: Context: "int handleCreate(HandlerArg*, int, int*)" at line 68 of file VBoxManageHostonly.cpp
+```
+
+- [Mavericks + VirtualBox 4.3で「Failed to create the host-only adapter」のエラーが出る場合の対処法 - F.Ko-Jiの「一秒後は未来」](http://blog.fkoji.com/2013/10260009.html)
+
+によると
+
+```
+sudo /Library/StartupItems/VirtualBox/VirtualBox restart
+```
+
 ## 参考サイト
 
 ### マニュアル
