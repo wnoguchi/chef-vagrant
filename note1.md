@@ -26,6 +26,16 @@ bundle exec berks cookbook hello
   config.berkshelf.enabled = true
 ```
 
+* `site-cookbooks/hello/recipes/default.rb` の編集。
+
+```
+log "Hello, Vagrant and Chef solo!"
+```
+
+```
+vagrant up
+```
+
 ## References
 
 - [今っぽい Vagrant + Chef Solo チュートリアル - Qiita [キータ]](http://qiita.com/taiki45/items/b46a2f32248720ec2bae)
