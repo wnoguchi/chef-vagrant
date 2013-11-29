@@ -90,11 +90,6 @@ sudo /Library/StartupItems/VirtualBox/VirtualBox restart
 
 - [Berkshelf](http://berkshelf.com/)
 
-#### Vagrant
-
-- [A list of base boxes for Vagrant - Vagrantbox.es](http://www.vagrantbox.es/)  
-Vagrantのboxイメージの集積所
-
 #### Opscode community
 
 膨大なcookbooksが集積されている。  
